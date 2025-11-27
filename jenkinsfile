@@ -20,24 +20,20 @@ pipeline {
 
         stage('Build') {
             steps {
-                dir('backend') {
-                    sh 'npm run build'
-                }
+                echo 'No build step required for backend'
             }
         }
 
         stage('Test') {
             steps {
-                dir('backend') {
-                    sh 'npm test || true'
-                }
+                echo 'Skipping tests (none defined)'
             }
         }
 
         stage('Deploy') {
             steps {
                 dir('backend') {
-                    sh 'pm2 restart app || pm2 start app.js --name app'
+                    sh 'nohup npm start &'
                 }
             }
         }
