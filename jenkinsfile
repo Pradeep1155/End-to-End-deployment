@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone Code') {
+            steps {
+                git 'https://github.com/Pradeep1155/End-to-End-deployment.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t pradeep/todo-app .'
+            }
+        }
+
+        stage('Stop Old Container') {
+            steps {
+                sh 'docker stop todo || true'
+                sh 'docker rm todo || true'
+            }
+        }
+
+        stage('Run New Container') {
+            steps {
+                sh 'docker run -d -p 3000:3000 --name todo pradeep/todo-app'
+            }
+        }
+    }
+}
