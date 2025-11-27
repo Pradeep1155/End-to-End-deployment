@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     stages {
+
         stage('Clone Code') {
             steps {
                 git branch: 'main',
@@ -11,25 +12,33 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                dir('backend') {
+                    sh 'npm install'
+                }
             }
         }
 
         stage('Build') {
             steps {
-                sh 'npm run build'
+                dir('backend') {
+                    sh 'npm run build'
+                }
             }
         }
 
         stage('Test') {
             steps {
-                sh 'npm test || true'
+                dir('backend') {
+                    sh 'npm test || true'
+                }
             }
         }
 
         stage('Deploy') {
             steps {
-                sh 'pm2 restart app || pm2 start app.js --name app'
+                dir('backend') {
+                    sh 'pm2 restart app || pm2 start app.js --name app'
+                }
             }
         }
     }
