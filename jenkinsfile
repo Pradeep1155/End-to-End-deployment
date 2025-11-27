@@ -4,7 +4,8 @@ pipeline {
     stages {
         stage('Clone Code') {
             steps {
-                git 'https://github.com/Pradeep1155/End-to-End-deployment.git'
+                git branch: 'main',
+                url: 'https://github.com/Pradeep1155/End-to-End-deployment.git'
             }
         }
 
@@ -14,23 +15,23 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Build') {
             steps {
-                sh 'docker build -t pradeep/todo-app .'
+                sh 'npm run build'
             }
         }
 
-        stage('Stop Old Container') {
+        stage('Test') {
             steps {
-                sh 'docker stop todo || true'
-                sh 'docker rm todo || true'
+                sh 'npm test || true'
             }
         }
 
-        stage('Run New Container') {
+        stage('Deploy') {
             steps {
-                sh 'docker run -d -p 3000:3000 --name todo pradeep/todo-app'
+                sh 'pm2 restart app || pm2 start app.js --name app'
             }
         }
     }
 }
+
